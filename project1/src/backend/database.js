@@ -7,17 +7,17 @@ const port = 5000;
 app.use(express.json());
 
 var con = mysql.createConnection({
-  host: "localhost",
+  host: "35.222.94.186",
   user: "root",
-  password: "Login@12345",
-  database: "StudentDB",
+  password: "root",
+  database: "student_database",
 });
 
 con.connect(function (err) {
   if (err) throw err;
 
   app.get("/db/search/results/allStudents", (req, res) => {
-    let mysqlQuery = "select * from StudentDB";
+    let mysqlQuery = "select * from students";
     con.query(mysqlQuery, (err, result) => {
       if (err) {
         console.log(err);
@@ -30,7 +30,7 @@ con.connect(function (err) {
 
   app.post("/db/add/newStudent", (req, res) => {
     const { fn, ln, em, addr, gpa } = req.body;
-    let x = "insert into StudentDB (First Name, Last Name, Email, Address, GPA) values ('as','aa','aa','aa','3');"
+    let x = "insert into students (first_name, last_name, email, address, GPA) values ('as','aa','aa','aa','3');"
     // let mysqlQuery = `insert into StudentDB.StudentDB (First Name, Last Name, Email, Address, GPA) values ('${fn}','${ln}','${em}','${addr}','${gpa}');`;
     con.query(x, (err, result) => {
       if (err) {
