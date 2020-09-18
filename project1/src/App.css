@@ -1,23 +1,31 @@
-.main-margin{
+.main-margin {
   margin-left: 100px;
   padding-top: 2rem;
 }
 
-.search-bar{
+.search-bar {
   background-color: cadetblue;
   /* background-color: lightblue; */
 }
 
-.header{
+.header {
   /* background-color: bisque; */
   background-color: cadetblue;
   height: 3rem;
 }
 
-.width-text{
+.width-text {
   width: 26.8rem;
 }
 
-.table-heading{
+/* .MuiPaper-elevation1{
+  box-shadow: 10px 2px rgb(120, 120, 158);
+} */
+
+.Title-title-24{
+  font-size: initial;
+}
+
+.MuiTableHead-root {
   background-color: rgb(185, 213, 214);
 }

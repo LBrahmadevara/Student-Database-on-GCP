@@ -12,15 +12,15 @@ function App() {
         <div className='header'>
           <div className='d-flex justify-content-around w-50 pt-2'>
           <div className='pr-4'>
-            <Link to="/" className='text-white'>Add a new Student</Link>
+            <Link to="/" className='text-white'>Add Student</Link>
           </div>
           <div>
-            <Link to="/database" className='text-white'>Existing Students</Link>
+            <Link to="/view" className='text-white'>View Students</Link>
           </div>
           </div>
         </div>
         <Switch>
-          <Route path="/database" component={Display} />
+          <Route path="/view" component={Display} />
           <Route path="/" component={AddStudent} />
         </Switch>
       </Router>

@@ -14,6 +14,7 @@ const AddStudent = () => {
   var [zip, setZip] = React.useState("");
   var [gpa, setGpa] = React.useState("");
   var [msg, setMsg] = React.useState("");
+  let [sId, setSId] = React.useState("");
 
   const handleSubmit = () => {
     var addr;
@@ -44,6 +45,8 @@ const AddStudent = () => {
         setMsg(`Successfully, ${fn} ${ln} is added into the database.`);
         setFn("");
         setLn("");
+        setSId(`Your Student ID: ${res.data.sId[0].sId}.`);
+        // console.log(res.data.sId[0].sId);
       }
     });
   };
@@ -155,8 +158,11 @@ const AddStudent = () => {
                   Submit
                 </Button>
               </div>
-              <div className='mt-2'>
-                <h5>{msg}</h5>
+              <div className="mt-2">
+                <h6>{msg}</h6>
+              </div>
+              <div className="">
+                <h6>{sId}</h6>
               </div>
             </div>
           </div>

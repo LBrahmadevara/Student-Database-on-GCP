@@ -33,7 +33,7 @@ con.connect(function (err) {
       if (err) {
         console.log(err);
       } else {
-        console.log(result);
+        // console.log(result);
         res.send({ values: result });
       }
     });
@@ -48,8 +48,15 @@ con.connect(function (err) {
       if (err) {
         console.log(err);
       } else {
-        console.log(result);
-        res.send({ valid: true });
+        let sqlQuery = `select sId from students order by sId desc limit 1;`;
+        con.query(sqlQuery, (err, response) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(response);
+            res.send({ valid: true, sId: response });
+          }
+        });
       }
     });
   });
@@ -68,7 +75,7 @@ con.connect(function (err) {
       if (err) {
         console.log(err);
       } else {
-        console.log(result);
+        // console.log(result);
         res.send({ valid: true, values: result });
       }
     });

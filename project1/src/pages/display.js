@@ -1,181 +1,71 @@
 import React from "react";
 import "../App.css";
-import {
-  Table,
-  TableContainer,
-  Paper,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  InputBase,
-  Select,
-  MenuItem,
-  InputLabel,
-  Button,
-} from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
+import { useEffect } from "react";
+import Paper from "@material-ui/core/Paper";
+import {
+  SearchState,
+  IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
+} from "@devexpress/dx-react-grid";
+import {
+  Grid,
+  Table,
+  Toolbar,
+  SearchPanel,
+  TableHeaderRow,
+  TableColumnResizing,
+  PagingPanel,
+} from "@devexpress/dx-react-grid-material-ui";
 
 const Display = () => {
   const headings = [
-    "Student ID",
-    "First Name",
-    "Last Name",
-    "Email",
-    "Address",
-    "GPA",
+    { name: "sId", title: "Student ID" },
+    { name: "first_name", title: "First Name" },
+    { name: "last_name", title: "Last Name" },
+    { name: "email", title: "Email" },
+    { name: "address", title: "Address" },
+    { name: "GPA", title: "GPA" },
   ];
-
-  const y = [
-    {
-      id: 123,
-      fn: "asd",
-      ln: "asc",
-      em: "ad",
-      ad: "ad",
-      gp: "asd",
-    },
-    {
-      id: 123,
-      fn: "asd",
-      ln: "asc",
-      em: "ad",
-      ad: "ad",
-      gp: "asd",
-    },
-    {
-      id: 123,
-      fn: "asd",
-      ln: "asc",
-      em: "ad",
-      ad: "adzsdfagadf agsdfbvadv agadfgva sGVSDFV",
-      gp: "asd",
-    },
-  ];
-  const [filter, setFilter] = React.useState("");
   let [student, setStudent] = React.useState([]);
-  let [searchId, setSearchId] = React.useState("");
-  let [value, setValue] = React.useState("");
-  let [records, setRecords] = React.useState(true);
-  
-  const filterChange = (event) => {
-    setFilter(event.target.value);
-    // console.log(event.target.value);
-    setSearchId(event.target.value);
-  };
+  let [render, setRender] = React.useState(0);
 
-  const allStudents = () => {
+  useEffect(() => {
     axios
       .get("http://localhost:5000/db/search/results/allStudents")
       .then((res) => {
         setStudent(res.data.values);
         //   console.log(res.data)
       });
-  };
+  }, [render]);
 
-  const search = () => {
-    let body = {
-      id: searchId,
-      value: value,
-    };
-    axios.post("http://localhost:5000/db/searchByID", body).then((res) => {
-      console.log(res.data);
-      if (res.data.valid) {
-        setStudent(res.data.values);
-        console.log(res.data.values.length);
-        if (res.data.values.length === 0) {
-          setRecords(false);
-          console.log("Database is Empty.");
-        } else {
-          setRecords(true);
-        }
-      }
-    });
-  };
+  const [defaultColumnWidths] = React.useState([
+    { columnName: "sId", width: 130 },
+    { columnName: "first_name", width: 180 },
+    { columnName: "last_name", width: 180 },
+    { columnName: "email", width: 230 },
+    { columnName: "address", width: 340 },
+    { columnName: "GPA", width: 50 },
+  ]);
 
   return (
-    <div className="p-4">
-      <div className="d-flex">
-        <div className="d-flex search-bar w-25 m-2">
-          <div className="m-1">
-            <SearchIcon onClick={search} />
-          </div>
-          <div className="pl-2">
-            <InputBase
-              placeholder="Search..."
-              className="text-white"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-            ></InputBase>
-          </div>
-        </div>
-        <div className="pl-4">
-          <InputLabel>Filter</InputLabel>
-          <Select value={filter} onChange={filterChange}>
-            {/* <MenuItem value="">None</MenuItem> */}
-            <MenuItem value="id">Student ID</MenuItem>
-            <MenuItem value="fn">First Name</MenuItem>
-            <MenuItem value="ln">Last Name</MenuItem>
-          </Select>
-        </div>
-      </div>
-
-      <TableContainer component={Paper}>
-        {records ? (
-          <Table>
-            <TableHead className="table-heading">
-              <TableRow>
-                {headings.map((heading) => (
-                  <TableCell>{heading}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {student.map((rows) => (
-                <TableRow>
-                  {Object.entries(rows).map(([key, value]) => (
-                    <TableCell>{value}</TableCell>
-                  ))}
-                </TableRow>
-              ))}
-
-              <TableRow>
-                {headings.map((heading) => (
-                  <TableCell>{heading}</TableCell>
-                ))}
-              </TableRow>
-              <TableRow>
-                {headings.map((heading) => (
-                  <TableCell>{heading}</TableCell>
-                ))}
-              </TableRow>
-              <TableRow>
-                {headings.map((heading) => (
-                  <TableCell>{heading}</TableCell>
-                ))}
-              </TableRow>
-              <TableRow>
-                {headings.map((heading) => (
-                  <TableCell>{heading}</TableCell>
-                ))}
-              </TableRow>
-              <TableRow>
-                {headings.map((heading) => (
-                  <TableCell>{heading}</TableCell>
-                ))}
-              </TableRow>
-            </TableBody>
-          </Table>
-        ) : (
-          <p>No records Found</p>
-        )}
-      </TableContainer>
-      <div>
-        <Button onClick={allStudents}>Load</Button>
-        {/* {console.log(student)} */}
-      </div>
-    </div>
+    // <div className="paper-border">
+    <Paper className="m-4 border">
+      <Grid rows={student} columns={headings}>
+        <PagingState defaultCurrentPage={0} pageSize={10} />
+        <IntegratedPaging />
+        <SearchState defaultValue="" />
+        <IntegratedFiltering />
+        <Table />
+        <TableColumnResizing defaultColumnWidths={defaultColumnWidths} />
+        <TableHeaderRow className="bg-warning" />
+        <Toolbar />
+        <SearchPanel />
+        <PagingPanel />
+      </Grid>
+    </Paper>
+    // </div>
   );
 };
 export default Display;
