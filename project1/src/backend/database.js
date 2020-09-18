@@ -6,10 +6,21 @@ const port = 5000;
 
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Headers", "*");
+  next();
+});
+
 var con = mysql.createConnection({
-  host: "35.222.94.186",
+  // host: "35.222.94.186",
+  host: "localhost",
   user: "root",
-  password: "root",
+  password: "Login@12345",
   database: "student_database",
 });
 
@@ -30,14 +41,35 @@ con.connect(function (err) {
 
   app.post("/db/add/newStudent", (req, res) => {
     const { fn, ln, em, addr, gpa } = req.body;
-    let x = "insert into students (first_name, last_name, email, address, GPA) values ('as','aa','aa','aa','3');"
-    // let mysqlQuery = `insert into StudentDB.StudentDB (First Name, Last Name, Email, Address, GPA) values ('${fn}','${ln}','${em}','${addr}','${gpa}');`;
-    con.query(x, (err, result) => {
+    // let x =
+    // "insert into students (first_name, last_name, email, address, GPA) values ('as','aa','aa','aa','3');";
+    let mysqlQuery = `insert into students (first_name, last_name, email, address, GPA) values ('${fn}','${ln}','${em}','${addr}','${gpa}');`;
+    con.query(mysqlQuery, (err, result) => {
       if (err) {
         console.log(err);
       } else {
-        // console.log(result);
+        console.log(result);
         res.send({ valid: true });
+      }
+    });
+  });
+
+  app.post("/db/searchById", (req, res) => {
+    const { id, value } = req.body;
+    let sqlQuery = `select * from students where `;
+    if (id === "id") {
+      sqlQuery = sqlQuery + `sId = '${value}';`;
+    } else if (id === "fn") {
+      sqlQuery = sqlQuery + `first_name = '${value}';`;
+    } else {
+      sqlQuery = sqlQuery + `last_name = '${value}';`;
+    }
+    con.query(sqlQuery, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        res.send({ valid: true, values: result });
       }
     });
   });

@@ -7,20 +7,21 @@ import Display from "./pages/display";
 function App() {
   return (
     <div className="">
+      {/* <AddStudent /> */}
       <Router>
         <div className='header'>
           <div className='d-flex justify-content-around w-50 pt-2'>
           <div className='pr-4'>
-            <Link to="/add" className='text-white'>Add a new Student</Link>
+            <Link to="/" className='text-white'>Add a new Student</Link>
           </div>
           <div>
-            <Link to="/search" className='text-white'>Search</Link>
+            <Link to="/database" className='text-white'>Existing Students</Link>
           </div>
           </div>
         </div>
         <Switch>
-          <Route path="/add" component={AddStudent} />
-          <Route path="/search" component={Display} />
+          <Route path="/database" component={Display} />
+          <Route path="/" component={AddStudent} />
         </Switch>
       </Router>
     </div>

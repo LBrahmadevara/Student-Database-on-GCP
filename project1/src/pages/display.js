@@ -26,44 +26,71 @@ const Display = () => {
     "Address",
     "GPA",
   ];
-  
+
   const y = [
     {
-        id: 123,
-        fn: 'asd',
-        ln: 'asc',
-        em: 'ad',
-        ad: 'ad',
-        gp: 'asd'
+      id: 123,
+      fn: "asd",
+      ln: "asc",
+      em: "ad",
+      ad: "ad",
+      gp: "asd",
     },
     {
-        id: 123,
-        fn: 'asd',
-        ln: 'asc',
-        em: 'ad',
-        ad: 'ad',
-        gp: 'asd'
+      id: 123,
+      fn: "asd",
+      ln: "asc",
+      em: "ad",
+      ad: "ad",
+      gp: "asd",
     },
     {
-        id: 123,
-        fn: 'asd',
-        ln: 'asc',
-        em: 'ad',
-        ad: 'adzsdfagadf agsdfbvadv agadfgva sGVSDFV',
-        gp: 'asd'
-    }
-  ]
+      id: 123,
+      fn: "asd",
+      ln: "asc",
+      em: "ad",
+      ad: "adzsdfagadf agsdfbvadv agadfgva sGVSDFV",
+      gp: "asd",
+    },
+  ];
   const [filter, setFilter] = React.useState("");
-  var [student, setStudent] = React.useState([]);
-
+  let [student, setStudent] = React.useState([]);
+  let [searchId, setSearchId] = React.useState("");
+  let [value, setValue] = React.useState("");
+  let [records, setRecords] = React.useState(true);
+  
   const filterChange = (event) => {
     setFilter(event.target.value);
+    // console.log(event.target.value);
+    setSearchId(event.target.value);
   };
 
   const allStudents = () => {
-    axios.get("/db/search/results/allStudents").then((res) => {
-      setStudent(res.data.values);
-      //   console.log(res.data)
+    axios
+      .get("http://localhost:5000/db/search/results/allStudents")
+      .then((res) => {
+        setStudent(res.data.values);
+        //   console.log(res.data)
+      });
+  };
+
+  const search = () => {
+    let body = {
+      id: searchId,
+      value: value,
+    };
+    axios.post("http://localhost:5000/db/searchByID", body).then((res) => {
+      console.log(res.data);
+      if (res.data.valid) {
+        setStudent(res.data.values);
+        console.log(res.data.values.length);
+        if (res.data.values.length === 0) {
+          setRecords(false);
+          console.log("Database is Empty.");
+        } else {
+          setRecords(true);
+        }
+      }
     });
   };
 
@@ -72,19 +99,21 @@ const Display = () => {
       <div className="d-flex">
         <div className="d-flex search-bar w-25 m-2">
           <div className="m-1">
-            <SearchIcon />
+            <SearchIcon onClick={search} />
           </div>
           <div className="pl-2">
             <InputBase
               placeholder="Search..."
               className="text-white"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
             ></InputBase>
           </div>
         </div>
         <div className="pl-4">
           <InputLabel>Filter</InputLabel>
           <Select value={filter} onChange={filterChange}>
-            <MenuItem value="">None</MenuItem>
+            {/* <MenuItem value="">None</MenuItem> */}
             <MenuItem value="id">Student ID</MenuItem>
             <MenuItem value="fn">First Name</MenuItem>
             <MenuItem value="ln">Last Name</MenuItem>
@@ -93,50 +122,54 @@ const Display = () => {
       </div>
 
       <TableContainer component={Paper}>
-        <Table>
-          <TableHead className="table-heading">
-            <TableRow>
-              {headings.map((heading) => (
-                <TableCell>{heading}</TableCell>
+        {records ? (
+          <Table>
+            <TableHead className="table-heading">
+              <TableRow>
+                {headings.map((heading) => (
+                  <TableCell>{heading}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {student.map((rows) => (
+                <TableRow>
+                  {Object.entries(rows).map(([key, value]) => (
+                    <TableCell>{value}</TableCell>
+                  ))}
+                </TableRow>
               ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {student.map(rows => <TableRow>
-                {Object.entries(rows).map(([key, value]) => <TableCell>
-                    {value}
-                </TableCell>)}
-            </TableRow>)}
 
-
-
-            <TableRow>
-              {headings.map((heading) => (
-                <TableCell>{heading}</TableCell>
-              ))}
-            </TableRow>
-            <TableRow>
-              {headings.map((heading) => (
-                <TableCell>{heading}</TableCell>
-              ))}
-            </TableRow>
-            <TableRow>
-              {headings.map((heading) => (
-                <TableCell>{heading}</TableCell>
-              ))}
-            </TableRow>
-            <TableRow>
-              {headings.map((heading) => (
-                <TableCell>{heading}</TableCell>
-              ))}
-            </TableRow>
-            <TableRow>
-              {headings.map((heading) => (
-                <TableCell>{heading}</TableCell>
-              ))}
-            </TableRow>
-          </TableBody>
-        </Table>
+              <TableRow>
+                {headings.map((heading) => (
+                  <TableCell>{heading}</TableCell>
+                ))}
+              </TableRow>
+              <TableRow>
+                {headings.map((heading) => (
+                  <TableCell>{heading}</TableCell>
+                ))}
+              </TableRow>
+              <TableRow>
+                {headings.map((heading) => (
+                  <TableCell>{heading}</TableCell>
+                ))}
+              </TableRow>
+              <TableRow>
+                {headings.map((heading) => (
+                  <TableCell>{heading}</TableCell>
+                ))}
+              </TableRow>
+              <TableRow>
+                {headings.map((heading) => (
+                  <TableCell>{heading}</TableCell>
+                ))}
+              </TableRow>
+            </TableBody>
+          </Table>
+        ) : (
+          <p>No records Found</p>
+        )}
       </TableContainer>
       <div>
         <Button onClick={allStudents}>Load</Button>
