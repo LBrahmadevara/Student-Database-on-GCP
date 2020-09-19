@@ -4,19 +4,20 @@ import axios from "axios";
 import { useEffect } from "react";
 import Paper from "@material-ui/core/Paper";
 import {
-  SearchState,
   IntegratedFiltering,
   PagingState,
   IntegratedPaging,
+  FilteringState,
+  
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
   Table,
   Toolbar,
-  SearchPanel,
   TableHeaderRow,
   TableColumnResizing,
   PagingPanel,
+  TableFilterRow
 } from "@devexpress/dx-react-grid-material-ui";
 
 const Display = () => {
@@ -40,13 +41,13 @@ const Display = () => {
       });
   }, [render]);
 
-  const [defaultColumnWidths] = React.useState([
+  const [columnWidths, setColumnWidths] = React.useState([
     { columnName: "sId", width: 130 },
     { columnName: "first_name", width: 180 },
     { columnName: "last_name", width: 180 },
     { columnName: "email", width: 230 },
-    { columnName: "address", width: 340 },
-    { columnName: "GPA", width: 50 },
+    { columnName: "address", width: 320 },
+    { columnName: "GPA", width: 60 },
   ]);
 
   return (
@@ -55,13 +56,13 @@ const Display = () => {
       <Grid rows={student} columns={headings}>
         <PagingState defaultCurrentPage={0} pageSize={10} />
         <IntegratedPaging />
-        <SearchState defaultValue="" />
+        <FilteringState defaultFilters={[]} />
         <IntegratedFiltering />
         <Table />
-        <TableColumnResizing defaultColumnWidths={defaultColumnWidths} />
-        <TableHeaderRow className="bg-warning" />
+        <TableColumnResizing columnWidths={columnWidths} onColumnWidthsChange={setColumnWidths} />
+        <TableHeaderRow />
         <Toolbar />
-        <SearchPanel />
+        <TableFilterRow />
         <PagingPanel />
       </Grid>
     </Paper>

@@ -53,7 +53,7 @@ const AddStudent = () => {
 
   return (
     <div>
-      <Paper className="m-3">
+      <Paper className="m-3 border">
         <div className="d-flex justify-content-between">
           <div className="d-flex flex-column justify-content-center main-margin">
             <div className="d-flex">

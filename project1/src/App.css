@@ -18,12 +18,25 @@
   width: 26.8rem;
 }
 
-/* .MuiPaper-elevation1{
-  box-shadow: 10px 2px rgb(120, 120, 158);
-} */
+.TableFilterCell-cell-32:first-child{
+  padding-left: 5px !important;
+}
 
-.Title-title-24{
-  font-size: initial;
+.Title-title-23{
+  font-weight: bold;
+  /* font-size: initial; */
+}
+
+.MuiToolbar-regular{
+  min-height: 0px !important;
+}
+
+.TableFilterCell-cell-32{
+  background-color: white;
+}
+
+.TableStubCell-cell-30{
+  background-color: white;
 }
 
 .MuiTableHead-root {
