@@ -1,0 +1,44 @@
+.main-margin {
+  margin-left: 100px;
+  padding-top: 2rem;
+}
+
+.search-bar {
+  background-color: cadetblue;
+  /* background-color: lightblue; */
+}
+
+.header {
+  /* background-color: bisque; */
+  background-color: cadetblue;
+  height: 3rem;
+}
+
+.width-text {
+  width: 26.8rem;
+}
+
+.TableFilterCell-cell-32:first-child{
+  padding-left: 5px !important;
+}
+
+.Title-title-23{
+  font-weight: bold;
+  /* font-size: initial; */
+}
+
+.MuiToolbar-regular{
+  min-height: 0px !important;
+}
+
+.TableFilterCell-cell-32{
+  background-color: white;
+}
+
+.TableStubCell-cell-30{
+  background-color: white;
+}
+
+.MuiTableHead-root {
+  background-color: rgb(185, 213, 214);
+}
