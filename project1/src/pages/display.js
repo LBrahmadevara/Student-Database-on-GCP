@@ -34,7 +34,7 @@ const Display = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/db/search/results/allStudents")
+      .get("http://34.67.122.198:5000/db/search/results/allStudents")
       .then((res) => {
         setStudent(res.data.values);
         //   console.log(res.data)
@@ -51,7 +51,6 @@ const Display = () => {
   ]);
 
   return (
-    // <div className="paper-border">
     <Paper className="m-4 border">
       <Grid rows={student} columns={headings}>
         <PagingState defaultCurrentPage={0} pageSize={10} />
@@ -66,7 +65,6 @@ const Display = () => {
         <PagingPanel />
       </Grid>
     </Paper>
-    // </div>
   );
 };
 export default Display;

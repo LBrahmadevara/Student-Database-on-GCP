@@ -32,7 +32,7 @@ const AddStudent = () => {
       gpa: gpa,
     };
     console.log(body);
-    axios.post("http://localhost:5000/db/add/newStudent", body).then((res) => {
+    axios.post("http://34.67.122.198:5000/db/add/newStudent", body).then((res) => {
       console.log(res.data);
       if (res.data.valid === true) {
         setEm("");
@@ -46,7 +46,6 @@ const AddStudent = () => {
         setFn("");
         setLn("");
         setSId(`Your Student ID: ${res.data.sId[0].sId}.`);
-        // console.log(res.data.sId[0].sId);
       }
     });
   };

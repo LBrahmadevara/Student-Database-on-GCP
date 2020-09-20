@@ -17,10 +17,10 @@ app.use((req, res, next) => {
 });
 
 var con = mysql.createConnection({
-  // host: "35.222.94.186",
-  host: "localhost",
+  host: "35.222.94.186",
+ // host: "localhost",
   user: "root",
-  password: "Login@12345",
+  password: "root",
   database: "student_database",
 });
 
@@ -41,8 +41,6 @@ con.connect(function (err) {
 
   app.post("/db/add/newStudent", (req, res) => {
     const { fn, ln, em, addr, gpa } = req.body;
-    // let x =
-    // "insert into students (first_name, last_name, email, address, GPA) values ('as','aa','aa','aa','3');";
     let mysqlQuery = `insert into students (first_name, last_name, email, address, GPA) values ('${fn}','${ln}','${em}','${addr}','${gpa}');`;
     con.query(mysqlQuery, (err, result) => {
       if (err) {
@@ -57,26 +55,6 @@ con.connect(function (err) {
             res.send({ valid: true, sId: response });
           }
         });
-      }
-    });
-  });
-
-  app.post("/db/searchById", (req, res) => {
-    const { id, value } = req.body;
-    let sqlQuery = `select * from students where `;
-    if (id === "id") {
-      sqlQuery = sqlQuery + `sId = '${value}';`;
-    } else if (id === "fn") {
-      sqlQuery = sqlQuery + `first_name = '${value}';`;
-    } else {
-      sqlQuery = sqlQuery + `last_name = '${value}';`;
-    }
-    con.query(sqlQuery, (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        // console.log(result);
-        res.send({ valid: true, values: result });
       }
     });
   });
