@@ -8,7 +8,7 @@ import {
   PagingState,
   IntegratedPaging,
   FilteringState,
-  
+  EditingState
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -17,8 +17,12 @@ import {
   TableHeaderRow,
   TableColumnResizing,
   PagingPanel,
-  TableFilterRow
+  TableFilterRow,
+  TableEditRow,
+  TableEditColumn,
 } from "@devexpress/dx-react-grid-material-ui";
+
+const getRowId = row => row.sId;
 
 const Display = () => {
   const headings = [
@@ -50,10 +54,40 @@ const Display = () => {
     { columnName: "GPA", width: 60 },
   ]);
 
+  const [editingStateColumnExtensions] = React.useState([
+    { columnName: 'sId', editingEnabled: false },
+  ]);
+
+  const commitChanges = ({ added, changed, deleted }) => {
+    let changedRows;
+    if (added) {
+      const startingAddedId = student.length > 0 ? student[student.length - 1].sId + 1 : 0;
+      changedRows = [
+        ...student,
+        ...added.map((row, index) => ({
+          sId: startingAddedId + index,
+          ...student,
+        })),
+      ];
+    }
+    if (changed) {
+      changedRows = student.map(row => (changed[row.sId] ? { ...row, ...changed[row.sId] } : row));
+    }
+    if (deleted) {
+      const deletedSet = new Set(deleted);
+      changedRows = student.filter(row => !deletedSet.has(row.sId));
+    }
+    setStudent(changedRows);
+  };
+
   return (
     // <div className="paper-border">
     <Paper className="m-4 border">
-      <Grid rows={student} columns={headings}>
+      <Grid rows={student} columns={headings} getRowId={getRowId}>
+      <EditingState
+          columnExtensions={editingStateColumnExtensions}
+          onCommitChanges={commitChanges}
+        />
         <PagingState defaultCurrentPage={0} pageSize={10} />
         <IntegratedPaging />
         <FilteringState defaultFilters={[]} />
@@ -61,6 +95,8 @@ const Display = () => {
         <Table />
         <TableColumnResizing columnWidths={columnWidths} onColumnWidthsChange={setColumnWidths} />
         <TableHeaderRow />
+        <TableEditRow />
+        <TableEditColumn showAddCommand showEditCommand showDeleteCommand />
         <Toolbar />
         <TableFilterRow />
         <PagingPanel />
