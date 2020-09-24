@@ -37,13 +37,23 @@ const Display = () => {
   let [render, setRender] = React.useState(0);
 
   useEffect(() => {
+    APICall();
+    // axios
+    //   .get("http://localhost:5000/db/search/results/allStudents")
+    //   .then((res) => {
+    //     setStudent(res.data.values);
+    //     //   console.log(res.data)
+    //   });
+  }, [render]);
+
+  const APICall = () => {
     axios
       .get("http://localhost:5000/db/search/results/allStudents")
       .then((res) => {
         setStudent(res.data.values);
         //   console.log(res.data)
       });
-  }, [render]);
+  }
 
   const [columnWidths, setColumnWidths] = React.useState([
     { columnName: "sId", width: 130 },
@@ -69,15 +79,34 @@ const Display = () => {
           ...student,
         })),
       ];
+      setStudent(changedRows);
     }
     if (changed) {
-      changedRows = student.map(row => (changed[row.sId] ? { ...row, ...changed[row.sId] } : row));
+      const sId = Object.keys(changed)[0];
+      const body = {
+        sId: sId,
+        x : changed[sId]
+      }
+      // console.log(body)
+      axios.post("http://localhost:5000/db/update/results/allStudents", body)
+      .then(res => {
+        if(res.data.valid){
+          APICall();
+        }
+      })
     }
     if (deleted) {
-      const deletedSet = new Set(deleted);
-      changedRows = student.filter(row => !deletedSet.has(row.sId));
+      const body = {
+        sId: deleted[0]
+      }
+      axios.post("http://localhost:5000/db/delete/results/allStudents", body)
+      .then(res => {
+        // console.log(res.data.valid);
+        if (res.data.valid){
+          APICall();
+        }
+      })
     }
-    setStudent(changedRows);
   };
 
   return (
