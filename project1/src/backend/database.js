@@ -16,11 +16,16 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Methods", "*");
+  next();
+});
+
 var con = mysql.createConnection({
-  // host: "35.222.94.186",
-  host: "localhost",
+  host: "35.222.94.186",
+  //host: "localhost",
   user: "root",
-  password: "Login@12345",
+  password: "root",
   database: "student_database",
 });
 
@@ -35,6 +40,40 @@ con.connect(function (err) {
       } else {
         // console.log(result);
         res.send({ values: result });
+      }
+    });
+  });
+
+
+app.post("/db/delete/results/allStudents", (req, res) => {
+    const { sId } = req.body;
+    let sqlQuery = `delete from students where sId="${sId}";`;
+    con.query(sqlQuery, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send({ valid: true });
+      }
+    });
+  });
+
+  app.post("/db/update/results/allStudents", (req, res) => {
+    const { sId, x } = req.body;
+    let sqlQuery = "update students set ";
+    let commaFlag = false;
+    Object.entries(x).map(([key, value]) => {
+      if (commaFlag) {
+        sqlQuery += `,`
+      }
+      sqlQuery += `${key}="${value}"`
+      commaFlag = true;
+    })
+    sqlQuery += ` where sId="${sId}";`;
+    con.query(sqlQuery, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send({ valid: true });
       }
     });
   });

@@ -48,7 +48,7 @@ const Display = () => {
 
   const APICall = () => {
     axios
-      .get("http://localhost:5000/db/search/results/allStudents")
+      .get("http://34.67.122.198:5000/db/search/results/allStudents")
       .then((res) => {
         setStudent(res.data.values);
         //   console.log(res.data)
@@ -88,7 +88,7 @@ const Display = () => {
         x : changed[sId]
       }
       // console.log(body)
-      axios.post("http://localhost:5000/db/update/results/allStudents", body)
+      axios.post("http://34.67.122.198:5000/db/update/results/allStudents", body)
       .then(res => {
         if(res.data.valid){
           APICall();
@@ -99,7 +99,7 @@ const Display = () => {
       const body = {
         sId: deleted[0]
       }
-      axios.post("http://localhost:5000/db/delete/results/allStudents", body)
+      axios.post("http://34.67.122.198:5000/db/delete/results/allStudents", body)
       .then(res => {
         // console.log(res.data.valid);
         if (res.data.valid){
@@ -117,7 +117,7 @@ const Display = () => {
           columnExtensions={editingStateColumnExtensions}
           onCommitChanges={commitChanges}
         />
-        <PagingState defaultCurrentPage={0} pageSize={10} />
+        <PagingState defaultCurrentPage={0} pageSize={20} />
         <IntegratedPaging />
         <FilteringState defaultFilters={[]} />
         <IntegratedFiltering />
