@@ -8,7 +8,7 @@ import {
   PagingState,
   IntegratedPaging,
   FilteringState,
-  
+  EditingState
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -17,8 +17,12 @@ import {
   TableHeaderRow,
   TableColumnResizing,
   PagingPanel,
-  TableFilterRow
+  TableFilterRow,
+  TableEditRow,
+  TableEditColumn,
 } from "@devexpress/dx-react-grid-material-ui";
+
+const getRowId = row => row.sId;
 
 const Display = () => {
   const headings = [
@@ -33,13 +37,23 @@ const Display = () => {
   let [render, setRender] = React.useState(0);
 
   useEffect(() => {
+    APICall();
+    // axios
+    //   .get("http://localhost:5000/db/search/results/allStudents")
+    //   .then((res) => {
+    //     setStudent(res.data.values);
+    //     //   console.log(res.data)
+    //   });
+  }, [render]);
+
+  const APICall = () => {
     axios
       .get("http://34.67.122.198:5000/db/search/results/allStudents")
       .then((res) => {
         setStudent(res.data.values);
         //   console.log(res.data)
       });
-  }, [render]);
+  }
 
   const [columnWidths, setColumnWidths] = React.useState([
     { columnName: "sId", width: 130 },
@@ -50,16 +64,67 @@ const Display = () => {
     { columnName: "GPA", width: 60 },
   ]);
 
+  const [editingStateColumnExtensions] = React.useState([
+    { columnName: 'sId', editingEnabled: false },
+  ]);
+
+  const commitChanges = ({ added, changed, deleted }) => {
+    let changedRows;
+    if (added) {
+      const startingAddedId = student.length > 0 ? student[student.length - 1].sId + 1 : 0;
+      changedRows = [
+        ...student,
+        ...added.map((row, index) => ({
+          sId: startingAddedId + index,
+          ...student,
+        })),
+      ];
+      setStudent(changedRows);
+    }
+    if (changed) {
+      const sId = Object.keys(changed)[0];
+      const body = {
+        sId: sId,
+        x : changed[sId]
+      }
+      // console.log(body)
+      axios.post("http://34.67.122.198:5000/db/update/results/allStudents", body)
+      .then(res => {
+        if(res.data.valid){
+          APICall();
+        }
+      })
+    }
+    if (deleted) {
+      const body = {
+        sId: deleted[0]
+      }
+      axios.post("http://34.67.122.198:5000/db/delete/results/allStudents", body)
+      .then(res => {
+        // console.log(res.data.valid);
+        if (res.data.valid){
+          APICall();
+        }
+      })
+    }
+  };
+
   return (
     <Paper className="m-4 border">
-      <Grid rows={student} columns={headings}>
-        <PagingState defaultCurrentPage={0} pageSize={10} />
+      <Grid rows={student} columns={headings} getRowId={getRowId}>
+      <EditingState
+          columnExtensions={editingStateColumnExtensions}
+          onCommitChanges={commitChanges}
+        />
+        <PagingState defaultCurrentPage={0} pageSize={20} />
         <IntegratedPaging />
         <FilteringState defaultFilters={[]} />
         <IntegratedFiltering />
         <Table />
         <TableColumnResizing columnWidths={columnWidths} onColumnWidthsChange={setColumnWidths} />
         <TableHeaderRow />
+        <TableEditRow />
+        <TableEditColumn showAddCommand showEditCommand showDeleteCommand />
         <Toolbar />
         <TableFilterRow />
         <PagingPanel />

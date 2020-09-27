@@ -42,10 +42,10 @@ const AddStudent = () => {
         setCity("");
         setState("");
         setGpa("");
-        setMsg(`Successfully, ${fn} ${ln} is added into the database.`);
+        setMsg(`${fn} ${ln} is successfully added into the database.`);
         setFn("");
         setLn("");
-        setSId(`Your Student ID: ${res.data.sId[0].sId}.`);
+        setSId(`with Student ID: ${res.data.sId[0].sId}.`);
       }
     });
   };
