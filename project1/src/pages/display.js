@@ -110,7 +110,6 @@ const Display = () => {
   };
 
   return (
-    // <div className="paper-border">
     <Paper className="m-4 border">
       <Grid rows={student} columns={headings} getRowId={getRowId}>
       <EditingState
@@ -131,7 +130,6 @@ const Display = () => {
         <PagingPanel />
       </Grid>
     </Paper>
-    // </div>
   );
 };
 export default Display;

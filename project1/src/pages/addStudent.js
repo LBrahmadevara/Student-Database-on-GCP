@@ -46,7 +46,6 @@ const AddStudent = () => {
         setFn("");
         setLn("");
         setSId(`with Student ID: ${res.data.sId[0].sId}.`);
-        // console.log(res.data.sId[0].sId);
       }
     });
   };
